@@ -20,11 +20,11 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 
 # === USER SETTINGS ===
-file_path = "PCA_deseaonalized/cv1_selected_variables.csv"   # path to your CSV
-time_col = "time"                # time column name
-sep = ","                        # CSV separator
-n_components = 3                 # number of principal components
-window_months = 12               # low-pass filter window (12 = annual mean)
+file_path = "PCA_deseaonalized/cv1_selected_variables.csv"  # path to your CSV
+time_col = "time"  # time column name
+sep = ","  # CSV separator
+n_components = 3  # number of principal components
+window_months = 12  # low-pass filter window (12 = annual mean)
 
 # === 1. Load the data ===
 df = pd.read_csv(file_path, sep=sep)
@@ -62,7 +62,7 @@ for i, var in enumerate(explained_var):
 loadings = pd.DataFrame(
     pca.components_.T,
     columns=[f"PC{i+1}" for i in range(n_components)],
-    index=variables
+    index=variables,
 )
 print("\nPCA Loadings (EOFs):")
 print(loadings)
@@ -81,7 +81,10 @@ plt.show()
 # === 8. Save results ===
 np.save("pcs_lowpass.npy", pcs)
 loadings.to_csv("pca_loadings_lowpass.csv")
-pd.DataFrame(pcs, index=valid_index,
-             columns=[f"PC{i+1}" for i in range(n_components)]).to_csv("pcs_timeseries_lowpass.csv")
+pd.DataFrame(
+    pcs, index=valid_index, columns=[f"PC{i+1}" for i in range(n_components)]
+).to_csv("pcs_timeseries_lowpass.csv")
 
-print("\nResults saved: pcs_lowpass.npy, pca_loadings_lowpass.csv, pcs_timeseries_lowpass.csv")
+print(
+    "\nResults saved: pcs_lowpass.npy, pca_loadings_lowpass.csv, pcs_timeseries_lowpass.csv"
+)

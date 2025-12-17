@@ -13,11 +13,11 @@ import dcor
 
 # === USER SETTINGS ===
 csv_file = "souley_thesis_data_aod_chl_sst_ws_dd_wd_cvbox.csv"
-sep = ";"                 # adjust if your CSV uses a different separator
+sep = ";"  # adjust if your CSV uses a different separator
 time_col = "time"
 n_components = 3
 output_prefix = "climate_pca_anoms"
-selected_month = 12        # 1=jan ... 12=dec
+selected_month = 12  # 1=jan ... 12=dec
 
 # === 1. LOAD DATA ===
 df = pd.read_csv(csv_file, sep=sep)
@@ -27,7 +27,9 @@ df = df.set_index(time_col)
 # Remove rows where date was not parsed
 df = df[~df.index.isna()]
 if df.empty:
-    raise ValueError("Time index empty after parsing. Check the 'time' column in the CSV.")
+    raise ValueError(
+        "Time index empty after parsing. Check the 'time' column in the CSV."
+    )
 
 # === 2. ENSURE COLUMNS ARE NUMERIC ===
 # Identify data columns (all except 'time' which is now the index)
@@ -38,7 +40,9 @@ for col in df.columns:
 # Now keep only truly numeric columns (those that have some number)
 num_cols = df.columns[df.dtypes.apply(lambda dt: np.issubdtype(dt, np.number))]
 if len(num_cols) == 0:
-    raise ValueError("No numeric columns found after coercion. Check the CSV and separator/formats.")
+    raise ValueError(
+        "No numeric columns found after coercion. Check the CSV and separator/formats."
+    )
 
 df = df[num_cols]  # reduce to numeric columns
 
@@ -78,17 +82,23 @@ anoms_month = anoms.loc[mask_month].copy()
 df_month = df.loc[mask_month].copy()
 
 if anoms_month.empty:
-    raise ValueError(f"No data available for month {selected_month} (filter resulted in empty).")
+    raise ValueError(
+        f"No data available for month {selected_month} (filter resulted in empty)."
+    )
 
 # Remove rows with NaNs (StandardScaler and PCA do not accept NaNs)
 before = len(anoms_month)
-anoms_month = anoms_month.dropna(axis=0, how='any')
+anoms_month = anoms_month.dropna(axis=0, how="any")
 df_month = df_month.loc[anoms_month.index]
 after = len(anoms_month)
-print(f"\nSelected month: {selected_month} -> {before} records before, {after} after dropna().")
+print(
+    f"\nSelected month: {selected_month} -> {before} records before, {after} after dropna()."
+)
 
 if anoms_month.empty:
-    raise ValueError(f"After removing rows with NaNs, no data remains for month {selected_month}.")
+    raise ValueError(
+        f"After removing rows with NaNs, no data remains for month {selected_month}."
+    )
 
 # === 7. STANDARDIZE AND RUN PCA ===
 scaler = StandardScaler()
@@ -108,7 +118,9 @@ print("\nExplained variance ratio (%):")
 for i, var in enumerate(explained):
     print(f"  PC{i+1}: {var*100:.2f}%")
 
-loadings = pd.DataFrame(EOFs.T, columns=[f"PC{i+1}" for i in range(n_components)], index=num_cols)
+loadings = pd.DataFrame(
+    EOFs.T, columns=[f"PC{i+1}" for i in range(n_components)], index=num_cols
+)
 print("\nLoadings (EOFs):")
 print(loadings.round(4))
 
@@ -139,8 +151,8 @@ print("--- End of Tests ---")
 
 
 # === 9. SIMPLE PLOTS ===
-plt.figure(figsize=(6,4))
-plt.bar(np.arange(1, n_components+1), explained*100)
+plt.figure(figsize=(6, 4))
+plt.bar(np.arange(1, n_components + 1), explained * 100)
 plt.xlabel("PC")
 plt.ylabel("Explained variance (%)")
 plt.title(f"Explained variance - month {selected_month}")
@@ -148,9 +160,9 @@ plt.tight_layout()
 plt.savefig(f"{output_prefix}_month{selected_month}_explained_variance.png", dpi=150)
 
 # Time series of PCs (one point per year for the selected month)
-fig, axs = plt.subplots(n_components, 1, figsize=(10, 2.5*n_components), sharex=True)
+fig, axs = plt.subplots(n_components, 1, figsize=(10, 2.5 * n_components), sharex=True)
 for i in range(n_components):
-    axs[i].plot(anoms_month.index, PCs[:, i], marker='o')
+    axs[i].plot(anoms_month.index, PCs[:, i], marker="o")
     axs[i].set_ylabel(f"PC{i+1}")
 axs[-1].set_xlabel("Time")
 plt.tight_layout()

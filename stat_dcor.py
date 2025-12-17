@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-PCA Analysis with Seasonality Removal, Low-Pass Filter, 
+PCA Analysis with Seasonality Removal, Low-Pass Filter,
 and Statistical Independence Testing (Distance Correlation + P-Value)
 """
 
@@ -9,14 +9,14 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-import dcor 
+import dcor
 
 # === USER SETTINGS ===
-file_path = "cv_box_selected_variables.csv"   
-time_col = "time"                
-sep = ","                        
-n_components = 3                 
-window_months = 12               
+file_path = "cv_box_selected_variables.csv"
+time_col = "time"
+sep = ","
+n_components = 3
+window_months = 12
 
 # === 1. Load and Pre-process ===
 df = pd.read_csv(file_path, sep=sep)
@@ -54,7 +54,9 @@ for i in range(n_components):
 
         # 2. Calculate the p-value (Statistical Significance)
         # num_resamples=500 is a good balance between accuracy and speed
-        test_result = dcor.independence.distance_covariance_test(pc_i, pc_j, num_resamples=500)
+        test_result = dcor.independence.distance_covariance_test(
+            pc_i, pc_j, num_resamples=500
+        )
         p_value = test_result.p_value
 
         print(f"Testing PC{i+1} vs PC{j+1}:")
