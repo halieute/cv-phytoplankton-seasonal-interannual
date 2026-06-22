@@ -1,2 +1,2 @@
 # cv-phytoplankton-seasonal-interannual
-Scripts for data analysis and plots in Souley, M.N.S et al (). Response of phytoplankton under varying environmental conditions in Cabo Verde: a seasonal and interannual analysis (1998–2024). Environmental Research: Climate.
+**Souley, S. M. N**., Rosário, N. E. Do, & Almeida, C. (2026). *Response of phytoplankton under varying environmental conditions in Cabo Verde: a seasonal and interannual analysis Response of phytoplankton under varying environmental conditions in Cabo Verde: a seasonal and interannual analysis*.* Environmental Research Communications*, 8(5). https://doi.org/10.1088/2515-7620/ae6d88 
